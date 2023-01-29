@@ -3,7 +3,7 @@
   "description": "Integrates with Google Analytics to obtain the most viewed content",
   "type": "wordpress-plugin",
   "require": {
-    "google/apiclient": "2.4.0"
+    "google/apiclient": "^2.13"
   },
   "license": "MIT",
   "autoload": {
