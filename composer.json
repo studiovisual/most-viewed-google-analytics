@@ -1,0 +1,20 @@
+{
+  "name": "studiovisual/most-viewed-google-analytics",
+  "description": "Integrates with Google Analytics to obtain the most viewed content",
+  "type": "wordpress-plugin",
+  "require": {
+    "google/apiclient": "2.4.0"
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "MostViewedGoogleAnalytics\\": "app/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Lorde Aleister",
+      "email": "lordealeister@gmail.com"
+    }
+  ]
+}
