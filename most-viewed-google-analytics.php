@@ -14,7 +14,7 @@
 use MostViewedGoogleAnalytics\App;
 use MostViewedGoogleAnalytics\Helpers\Utils;
 use MostViewedGoogleAnalytics\Services\PageViews;
-use MostViewedGoogleAnalytics\Services\PageViewsV2;
+use MostViewedGoogleAnalytics\Services\PageViewsGa4;
 
 defined('ABSPATH') || exit;
 
@@ -46,7 +46,7 @@ function most_viewed(string $period = 'month', int $quantity = 5): array {
 //	if(!empty($transient_value))
 //		return array_slice($transient_value, 0, $quantity);
 
-	$service = PageViewsV2::getInstance();
+	$service = PageViewsGa4::getInstance();
 //	$service = PageViews::getInstance();
 	$views   = $service->getReports($period);
 	$results = Utils::filterResults($views);

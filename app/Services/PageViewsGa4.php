@@ -15,7 +15,7 @@ use GuzzleHttp\Exception\RequestException;
 use MostViewedGoogleAnalytics\App;
 use MostViewedGoogleAnalytics\Helpers\Utils;
 
-class PageViewsV2
+class PageViewsGa4
 {
 	private static $instance = null;
 
