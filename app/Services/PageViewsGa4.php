@@ -6,6 +6,7 @@ use Google\Analytics\Data\V1beta\Client\BetaAnalyticsDataClient;
 use Google\Analytics\Data\V1beta\DateRange;
 use Google\Analytics\Data\V1beta\Dimension;
 use Google\Analytics\Data\V1beta\Metric;
+use Google\Analytics\Data\V1beta\OrderBy;
 use Google\Analytics\Data\V1beta\RunReportRequest;
 use Google\Analytics\Data\V1beta\RunReportResponse;
 use Google\ApiCore\ApiException;
@@ -34,18 +35,13 @@ class PageViewsGa4
 		return self::$instance;
 	}
 
-	/**
-	 * @throws ApiException
-	 * @throws ValidationException
-	 */
 	public function getReports(string $period = 'month') {
 
 		try {
-			$util = new Utils();
 
 			$options = $this->buildCredentialsOptions();
 			$client = new BetaAnalyticsDataClient($options);
-			$request = $this->buildRequest($util->getRange($period));
+			$request = $this->buildRequest($period);
 			$response = $client->runReport($request);
 
 			$parsed = $this->parseResponse($response);
@@ -57,28 +53,27 @@ class PageViewsGa4
 		}
 		catch(ValidationException $e) {
 			error_log('MostViewedGoogleAnalytics/getReports: ' . print_r($e->getMessage(), true));
-			dd($e->getMessage());
 			return $e->getMessage();
 		}
 		catch (ApiException $e) {
-			dd($e->getMessage());
+			error_log('MostViewedGoogleAnalytics/getReports: ' . print_r($e->getMessage(), true));
+			return $e->getMessage();
 		}
 		catch (RequestException $e) {
-			dd($e->getMessage());
-		}
-		catch (\Exception $e) {
-			dd($e->getMessage());
+			error_log('MostViewedGoogleAnalytics/getReports: ' . print_r($e->getMessage(), true));
+			return $e->getMessage();
 		}
 	}
 
-	public function buildRequest($start_date) {
+	public function buildRequest($period) {
+		$util = new Utils();
 		$request = new RunReportRequest();
 
 		$request->setProperty('properties/' . $this->property_id);
 
 		$request->setDateRanges([
 			new DateRange([
-				'start_date' => $start_date,
+				'start_date' => $util->getRange($period),
 				'end_date' => 'today',
 			]),
 		]);
@@ -89,12 +84,25 @@ class PageViewsGa4
 			]),
 			new Dimension([
 				'name' => 'pagePath',
+			]),
+			new Dimension([
+				'name' => $period,
 			])
 		]);
 
 		$request->setMetrics([
 			new Metric([
 				'name' => 'screenPageViews'
+			])
+		]);
+
+		$request->setOrderBys([
+			new OrderBy([
+				'dimension' =>new OrderBy\DimensionOrderBy([
+					'dimension_name' => $period,
+					'order_type' => OrderBy\DimensionOrderBy\OrderType::ALPHANUMERIC
+				]),
+				'desc' => false
 			])
 		]);
 
@@ -114,12 +122,6 @@ class PageViewsGa4
 		];
 	}
 
-	/**
-	 * parseResponse
-	 *
-	 * @param  mixed $response
-	 * @return void
-	 */
 	private function parseResponse(RunReportResponse $response) {
 		if(empty($response) || ! isset($response))
 			return false;

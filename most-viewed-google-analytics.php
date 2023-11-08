@@ -34,7 +34,7 @@ new App;
  * @return array
  */
 function most_viewed(string $period = 'month', int $quantity = 5): array {
-	if(!in_array($period, ['year', 'month', 'week', '72hours', '48hours', 'today']))
+	if(!in_array($period, ['year', 'month', 'week', 'today']))
 		throw new Exception('MostViewedGoogleAnalytics: Invalid interval. Choose one of valid options: year, month, week, 72hours, 48hours, today');
 
 	if($quantity > 10)
@@ -43,12 +43,22 @@ function most_viewed(string $period = 'month', int $quantity = 5): array {
 	$transient_name  = App::$domain . '_' . $period;
 	$transient_value = get_transient($transient_name);
 
-//	if(!empty($transient_value))
-//		return array_slice($transient_value, 0, $quantity);
+	if(!empty($transient_value))
+		return array_slice($transient_value, 0, $quantity);
 
-	$service = PageViewsGa4::getInstance();
-//	$service = PageViews::getInstance();
+
+	if (get_option(App::$domain . '_ga') == "GA4") {
+		$service = PageViewsGa4::getInstance();
+	} else {
+		$service = PageViews::getInstance();
+	}
+
 	$views   = $service->getReports($period);
+
+	if (!$views) {
+		return [];
+	}
+
 	$results = Utils::filterResults($views);
 
 	set_transient($transient_name, $results, HOUR_IN_SECONDS * 24);
