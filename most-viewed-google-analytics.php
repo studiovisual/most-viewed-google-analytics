@@ -14,6 +14,7 @@
 use MostViewedGoogleAnalytics\App;
 use MostViewedGoogleAnalytics\Helpers\Utils;
 use MostViewedGoogleAnalytics\Services\PageViews;
+use MostViewedGoogleAnalytics\Services\PageViewsV2;
 
 defined('ABSPATH') || exit;
 
@@ -42,10 +43,11 @@ function most_viewed(string $period = 'month', int $quantity = 5): array {
 	$transient_name  = App::$domain . '_' . $period;
 	$transient_value = get_transient($transient_name);
 
-	if(!empty($transient_value))
-		return array_slice($transient_value, 0, $quantity);
+//	if(!empty($transient_value))
+//		return array_slice($transient_value, 0, $quantity);
 
-	$service = PageViews::getInstance();
+	$service = PageViewsV2::getInstance();
+//	$service = PageViews::getInstance();
 	$views   = $service->getReports($period);
 	$results = Utils::filterResults($views);
 

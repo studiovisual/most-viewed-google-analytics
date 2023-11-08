@@ -43,6 +43,7 @@ class Settings {
 		);
 
 		register_setting(App::$domain, App::$domain . '_view_id');
+		register_setting(App::$domain, App::$domain . '_property_id');
 		register_setting(App::$domain, App::$domain . '_credentials');
 		register_setting(App::$domain, App::$domain . '_exclude');
 
@@ -82,6 +83,19 @@ class Settings {
 				'label_for'   => App::$domain . '_exclude',
 				'name' 		  => App::$domain . '_exclude',
 				'placeholder' => 'Enter the list of URLs that should be ignored here, one per line',
+			)
+		);
+
+		add_settings_field(
+			App::$domain . '_property_id',
+			'Property ID',
+			array('MostViewedGoogleAnalytics\Views\Options', 'renderInput'),
+			App::$domain,
+			App::$domain,
+			array(
+				'label_for'   => App::$domain . '_property_id',
+				'name' 		  => App::$domain . '_property_id',
+				'placeholder' => 'Ex.: 219408844',
 			)
 		);
 	}
