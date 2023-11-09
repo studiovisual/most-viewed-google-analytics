@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: Most Viewed by Google Analytics
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Studio Visual
  * Author URI:  https://studiovisual.com.br
  * Description: Integrates with Google Analytics to obtain the most viewed content
