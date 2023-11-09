@@ -42,4 +42,23 @@ class Utils {
 		return $paths;
 	}
 
+	/**
+	 * getRange
+	 *
+	 * @param  mixed $period
+	 * @return string
+	 */
+	public function getRange(string $period): string {
+		$ranges = [
+			'year'    => date_i18n('Y-m-d', strtotime('-1 year')),
+			'month'   => date_i18n('Y-m-d', strtotime('-29 days')),
+			'week'    => date_i18n('Y-m-d', strtotime('-1 month')),
+			'72hours' => date_i18n('Y-m-d', strtotime('-3 days')),
+			'48hours' => date_i18n('Y-m-d', strtotime('-2 days')),
+			'today'   => date_i18n('Y-m-d', strtotime('today')),
+		];
+
+		return $ranges[$period] ?? $ranges['month'];
+	}
+
 }
