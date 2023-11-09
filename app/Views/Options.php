@@ -67,4 +67,19 @@ class Options {
 		<?php
 	}
 
+	/**
+	 * renderTextarea
+	 *
+	 * @param  mixed $args
+	 * @return void
+	 */
+	public static function renderRadio(array $args): void {
+		foreach ($args['values'] as $value) {
+			?>
+			<input type="radio" id="<?= $value . $args['name'] ?>" name="<?= $args['name'] ?>" value="<?= $value ?>" <?= $value == get_option($args['name']) ? 'checked' : '' ?>
+			<label for="<?= $value . $args['name'] ?>"><?= $value ?></label>
+			<?php
+		}
+	}
+
 }

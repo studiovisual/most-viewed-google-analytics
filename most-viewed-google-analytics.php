@@ -2,7 +2,7 @@
 
 /**
  * Plugin Name: Most Viewed by Google Analytics
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: Studio Visual
  * Author URI:  https://studiovisual.com.br
  * Description: Integrates with Google Analytics to obtain the most viewed content
@@ -14,6 +14,7 @@
 use MostViewedGoogleAnalytics\App;
 use MostViewedGoogleAnalytics\Helpers\Utils;
 use MostViewedGoogleAnalytics\Services\PageViews;
+use MostViewedGoogleAnalytics\Services\PageViewsGa4;
 
 defined('ABSPATH') || exit;
 
@@ -33,7 +34,7 @@ new App;
  * @return array
  */
 function most_viewed(string $period = 'month', int $quantity = 5): array {
-	if(!in_array($period, ['year', 'month', 'week', '72hours', '48hours', 'today']))
+	if(!in_array($period, ['year', 'month', 'week', 'today']))
 		throw new Exception('MostViewedGoogleAnalytics: Invalid interval. Choose one of valid options: year, month, week, 72hours, 48hours, today');
 
 	if($quantity > 10)
@@ -45,8 +46,19 @@ function most_viewed(string $period = 'month', int $quantity = 5): array {
 	if(!empty($transient_value))
 		return array_slice($transient_value, 0, $quantity);
 
-	$service = PageViews::getInstance();
+
+	if (get_option(App::$domain . '_ga') == "GA4") {
+		$service = PageViewsGa4::getInstance();
+	} else {
+		$service = PageViews::getInstance();
+	}
+
 	$views   = $service->getReports($period);
+
+	if (!$views) {
+		return [];
+	}
+
 	$results = Utils::filterResults($views);
 
 	set_transient($transient_name, $results, HOUR_IN_SECONDS * 24);

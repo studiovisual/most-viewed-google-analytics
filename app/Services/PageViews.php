@@ -14,6 +14,7 @@ use Google_Service_AnalyticsReporting_Dimension;
 use Google_Service_AnalyticsReporting_OrderBy;
 use Google_Service_Exception;
 use MostViewedGoogleAnalytics\App;
+use MostViewedGoogleAnalytics\Helpers\Utils;
 
 class PageViews {
 
@@ -28,24 +29,6 @@ class PageViews {
 		$this->credentials = get_option(App::$domain . '_credentials');
 	}
 
-	/**
-	 * getRange
-	 *
-	 * @param  mixed $period
-	 * @return string
-	 */
-	public function getRange(string $period): string {
-		$ranges = [
-			'year'    => date_i18n('Y-m-d', strtotime('-1 year')),
-			'month'   => date_i18n('Y-m-d', strtotime('-29 days')),
-			'week'    => date_i18n('Y-m-d', strtotime('-1 month')),
-			'72hours' => date_i18n('Y-m-d', strtotime('-3 days')),
-			'48hours' => date_i18n('Y-m-d', strtotime('-2 days')),
-			'today'   => date_i18n('Y-m-d', strtotime('today')),
-		];
-
-		return $ranges[$period] ?? $ranges['month'];
-	}
 
 	/**
 	 * getReports
@@ -63,11 +46,12 @@ class PageViews {
 			$client->setApplicationName('Most Viewed by Google Analytics');
 			$client->setAuthConfig(json_decode($this->credentials, true));
 			$client->setScopes(array('https://www.googleapis.com/auth/analytics.readonly'));
+			$util = new Utils();
 
 			$analytics = new Google_Service_AnalyticsReporting($client);
 
 			$response = $analytics->reports->batchGet(
-				$this->buildReport($this->getRange($period))
+				$this->buildReport($util->getRange($period))
 			);
 
 			$results = $response->getReports();
