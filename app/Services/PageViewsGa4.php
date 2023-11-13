@@ -35,7 +35,7 @@ class PageViewsGa4
 		return self::$instance;
 	}
 
-	public function getReports(string $period = 'month') {
+	public function getReports(string $period = 'week') {
 
 		try {
 
@@ -102,7 +102,7 @@ class PageViewsGa4
 					'dimension_name' => $period,
 					'order_type' => OrderBy\DimensionOrderBy\OrderType::ALPHANUMERIC
 				]),
-				'desc' => false
+				'desc' => true
 			])
 		]);
 

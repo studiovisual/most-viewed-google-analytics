@@ -1,5 +1,6 @@
 {
   "name": "studiovisual/most-viewed-google-analytics",
+  "version": "1.1.1",
   "description": "Integrates with Google Analytics to obtain the most viewed content",
   "type": "wordpress-plugin",
   "require": {
