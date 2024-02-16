@@ -36,9 +36,7 @@ class PageViewsGa4
 	}
 
 	public function getReports(string $period = 'week') {
-
 		try {
-
 			$options = $this->buildCredentialsOptions();
 			$client = new BetaAnalyticsDataClient($options);
 			$request = $this->buildRequest($period);
